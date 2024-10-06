@@ -1,0 +1,102 @@
+body{
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: linear-gradient(to right, skyblue, blue); /* Gradient background */
+}
+
+.navbar {
+    position: fixed; /* Sticks the navbar to the bottom */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40; /* Dark background color for better contrast */
+    color: white; /* Text color for better contrast */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Space out logo and nav items */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Padding on the left and right */
+}
+
+/* Logo styling */
+.navbar .logo {
+    font-weight: bold;
+    color: white; /* Logo color */
+    font-size: 20px; /* Adjust font size as needed */
+}
+
+.navbar ul {
+    list-style-type: none; /* Removes bullets */
+    margin: 0; /* Removes margin */
+    padding: 0; /* Removes padding */
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Aligns items vertically in the center */
+}
+
+/* Spacing between list items */
+.navbar li {
+    margin-right: 15px; /* Spacing between items */
+}
+
+/* Link styling */
+.navbar a {
+    font-weight: bold;
+    color: white; /* Link color */
+    text-decoration: none; /* Removes underline */
+    font-size: 16px; /* Adjust font size as needed */
+    padding: 5px 10px; /* Add some padding to increase clickable area */
+    transition: color 0.3s;
+}
+
+/* Hover effect for links */
+.navbar a:hover {
+    color: black; /* Light color on hover for better contrast with dark background */
+}
+/* Styling for Font Awesome icons within the navbar */
+.navbar i {
+    color: #ffffff; /* Default icon color */
+    font-size: 20px; /* Adjust icon size if needed */
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.navbar i:hover {
+    color: black; /* Highlight color on hover (can be adjusted) */
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+  
+    .navbar ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px 0;
+    }
+  
+    .navbar ul li {
+        margin: 10px 0;
+        width: 100%;
+        text-align: center;
+    }
+  
+    .navbar ul li a {
+        width: 100%;
+        display: block;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .navbar img {
+        width: 40px;
+        height: 40px;
+    }
+  
+    .navbar ul li a {
+        font-size: 14px;
+    }
+  
+    .navbar a .fas {
+        font-size: 20px;
+    }
+  }

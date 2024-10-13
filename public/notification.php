@@ -26,54 +26,24 @@
         <li><a href="login.php">Log out</a></li>
         </ul>
     </div>
-    <br>
-    <br>
-    <input type="search" placeholder="search">
-    
+
     <div class="container mt-5">
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>Medicine</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Message</th>
+                    <th>Date</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Biogesic</td>
-                    <td>Analgesic and antipyretic medication.</td>
-                    <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Request</button>
-                    </td>
+                    <td>You're request is accepted</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="modal" id="myModal">
-            <div class="modal-dialog">
-              <div class="modal-content">
-          
-                <!-- Modal Header -->
-                <div class="modal-header">
-                  <h4 class="modal-title">Modal Heading</h4>
-                </div>
-          
-                <!-- Modal body -->
-                <div class="modal-body">
-                  Modal body..
-                </div>
-          
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
-
-
-
-
-
-
+    
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

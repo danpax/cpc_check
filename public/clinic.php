@@ -12,26 +12,52 @@
       body{
     background-image: linear-gradient(to right, skyblue, blue); /* Gradient background */
       }
+      .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .image-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.01);
+        }
       
 </style>
 <body>
     <div class="navbar bg-dark">
-        <div><a href="home.html"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; border-radius: 50px;"></a></div>
+        <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
         <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="medicine.html">Medicine</a></li>
-        <li><a href="clinic.html">Clinic Staff</a></li>
-        <li><a href="request.html">My Request</a></li>
-        <a href="notification.html"><i class='fas fa-bell' style='font-size:24px;'></i></a>
-        <li><a href="login.html">Log out</a></li>
+        <li><a href="home.php">Home</a></li>
+        <li><a href="medicine.php">Medicine</a></li>
+        <li><a href="clinic.php">Clinic Staff</a></li>
+        <li><a href="request.php">My Request</a></li>
+        <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
+        <li><a href="login.php">Log out</a></li>
         </ul>
     </div>
 
+    <section class="image-gallery container">
+        <div><img src="../img/pp.jpg" alt="Image 1"><h3 class="text-center mt-2">Respondent</h3></div>
+        <div><img src="../img/pp.jpg" alt="Image 2"><h3 class="text-center mt-2">Nurse</h3></div>
+        <div><img src="../img/pp.jpg" alt="Image 3"><h3 class="text-center mt-2">Respondet</h3></div>
+    </section>
 
 
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>

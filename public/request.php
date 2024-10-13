@@ -16,18 +16,37 @@
 </style>
 <body>
     <div class="navbar bg-dark">
-        <div><a href="home.html"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; border-radius: 50px;"></a></div>
+        <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
         <ul>
-        <li><a href="home.html">Home</a></li>
-        <li><a href="medicine.html">Medicine</a></li>
-        <li><a href="clinic.html">Clinic Staff</a></li>
-        <li><a href="request.html">My Request</a></li>
-        <a href="notification.html"><i class='fas fa-bell' style='font-size:24px;'></i></a>
-        <li><a href="login.html">Log out</a></li>
+        <li><a href="home.php">Home</a></li>
+        <li><a href="medicine.php">Medicine</a></li>
+        <li><a href="clinic.php">Clinic Staff</a></li>
+        <li><a href="request.php">My Request</a></li>
+        <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
+        <li><a href="login.php">Log out</a></li>
         </ul>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container mt-5">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Medicine</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Biogesic</td>
+                    <td>sakit akong nawng</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
     
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </html>

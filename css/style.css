@@ -203,7 +203,7 @@ th, td{
     -webkit-appearance: none;
     height: 16px;
     width: 16px;
-    background-image: url('../img/cpc.jpg'); /* Customize with your own image */
+    background-image: url('../img/cancel.png'); /* Customize with your own image */
     background-size: contain;
     cursor: pointer;
   }

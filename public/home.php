@@ -59,26 +59,32 @@
         
               <!-- Modal body -->
               <div class="modal-body">
-                <label for="">Name: </label>
-                <input type="text" name="" id="">
+                <label for="" class="form-label">Name: </label>
+                <input type="text" name="" id="" class="form-control">
                 <br>
-                <label for="">Address: </label>
-                <input type="text">
+                <label for="" class="form-label">Address: </label>
+                <input type="text" class="form-control">
                 <br>
-                <label for="">Date of Birth: </label>
-                <input type="text">
+                <label for="" class="form-label">Date of Birth: </label>
+                <input type="text" class="form-control">
                 <br>
-                <label for="">Parent/Guardian: </label>
-                <input type="text">
+                <label for="" class="form-label">Parent/Guardian: </label>
+                <input type="text" class="form-control">
                 <br>
-                <label for="">Phone #: </label>
-                <input type="text" name="" id="">
+                <label for="" class="form-label">Phone #: </label>
+                <input type="text" name="" id="" class="form-control">
                 <br>
-                <label for="">Email: </label>
-                <input type="email">
+                <label for="" class="form-label">Email: </label>
+                <input type="email" class="form-control">
                 <br>
-                <label for="">Emergency #: </label>
-                <input type="text">
+                <label for="" class="form-label">Emergency #: </label>
+                <input type="text" class="form-control">
+                <br><br>
+                <label for="" class="form-label">Health Condition/s: </label>
+                <br>
+                <input type="text" class="form-control">
+                <input type="text" class="form-control">
+                <input type="text" class="form-control">
               </div>
         
               <!-- Modal footer -->

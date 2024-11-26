@@ -37,7 +37,6 @@
     </style>
 </head>
 <body>
-        <?php include 'db.php'; ?> <!-- PHP Logic included -->
 
     <div class="container">
     <form action="" method="POST" class="form">

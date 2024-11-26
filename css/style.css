@@ -107,8 +107,8 @@ body{
     font-weight: bold;
     font-size: 60px; /* Adjust as needed */
     color: #0a07f1; /* Primary text color */
-    text-shadow: 2px 2px 0 #e06ecd, /* First shadow color */
-                 -2px -2px 0 #e06ecd; /* Second shadow color */
+    text-shadow: 2px 2px 0 #000000, /* bottom shadow color */
+                 -2px -2px 0 #7e7e7e; /* top shadow color */
 }
 th, td{
     border: 1px solid black;

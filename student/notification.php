@@ -12,6 +12,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Medicine</title>
 </head>
+<style>
+    .background {
+    position: absolute; /* Use absolute positioning */
+    background-image: url('../img/cpc.png');
+    background-repeat: no-repeat;
+    background-size: cover; /* Ensure the background image covers the entire area */
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    z-index: -1;
+    }
+
+</style>
 <body>
     <div class="navbar bg-dark">
         <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
@@ -24,6 +37,7 @@
         <li><a href="logout.php">Log out</a></li>
         </ul>
     </div>
+    <div class="background"></div>
 
     <div class="container mt-5">
         <table class="table table-striped table-bordered">

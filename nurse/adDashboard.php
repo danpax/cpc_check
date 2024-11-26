@@ -72,10 +72,19 @@
             font-weight: bold;
             font-size: 60px; /* Adjust as needed */
             color: #0a07f1; /* Primary text color */
-            text-shadow: 2px 2px 0 #e06ecd, /* First shadow color */
-                        -2px -2px 0 #e06ecd; /* Second shadow color */
+            text-shadow: 2px 2px 0 #000000, /* bottom shadow color */
+                        -2px -2px 0 #7e7e7e; /* top shadow color */
         }
-
+        .background {
+        position: absolute; /* Use absolute positioning */
+        background-image: url('../img/cpc.png');
+        background-repeat: no-repeat;
+        background-size: cover; /* Ensure the background image covers the entire area */
+        height: 100%;
+        width: 100%;
+        top: 0%;
+        z-index: -1;
+        }
     </style>
 <body>
     <div class="sidebar">
@@ -90,6 +99,9 @@
             <li><a href="adMonitoring.php" class="text-decoration-none">Monitored Student</a></li>
         </ul>
     </div>
+
+    <div class="background"></div>
+
     <button class="btn btn-secondary" style="float: right; margin-right: 20px;" onclick="window.location.href='logout.php'">Log out</button>
     <div class="content">
         <h1>Welcome to the dashboard!</h1>

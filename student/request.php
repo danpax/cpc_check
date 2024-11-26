@@ -8,28 +8,20 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <title>Homepage</title>
+    <title>Medicine</title>
 </head>
 <style>
-      .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
+    .background {
+    position: absolute; /* Use absolute positioning */
+    background-image: url('../img/cpc.png');
+    background-repeat: no-repeat;
+    background-size: cover; /* Ensure the background image covers the entire area */
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    z-index: -1;
+    }
 
-        .image-gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .image-gallery img:hover {
-            transform: scale(1.01);
-        }
-      
 </style>
 <body>
     <div class="navbar bg-dark">
@@ -44,19 +36,28 @@
         </ul>
     </div>
 
-    <section class="image-gallery container">
-        <div><img src="../img/pp.png" alt="Image 1"><h3 class="text-center mt-2">Respondent</h3></div>
-        <div><img src="../img/pp.png" alt="Image 2"><h3 class="text-center mt-2">Nurse</h3></div>
-        <div><img src="../img/pp.png" alt="Image 3"><h3 class="text-center mt-2">Respondet</h3></div>
-    </section>
+    <div class="background"></div>
+    
+    <div class="container mt-5">
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Medicine</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Biogesic</td>
+                    <td>sakit akong nawng</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
 
-
-
-
-
-
-
+    
 </body>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>

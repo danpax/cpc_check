@@ -1,10 +1,16 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,8 +59,8 @@
         .container{
             margin-left: 17%;
         }
+        
     </style>
-</head>
 <body>
     <div class="sidebar">
     <center><a href="adDashboard.php"><img src="../img/phoenix.jpg" alt="" style="width: 180px; height: 80px; border-radius: 5px;"></a></center>
@@ -78,12 +84,12 @@
             <thead class="table-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Medicine</th>
-                    <th>Stock</th>
-                    <th>Description</th>
-                    <th>Reason</th>
-                    <th>Expiration Date</th>
-                    <th>Date</th>
+                    <th>Address</th>
+                    <th>Date of Birth</th>
+                    <th>Parent/Guadian</th>
+                    <th>Phone#</th>
+                    <th>Email</th>
+                    <th>Emergencey#</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -96,7 +102,38 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td><i class="fa fa-eye" data-bs-toggle="modal" data-bs-target="#myModal" style="cursor: pointer;"></i></td>
                 </tr>
             </tbody>
         </table>
+
+        <div class="modal" id="myModal">
+          <div class="modal-dialog">
+            <div class="modal-content">
+        
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Background Information</h4>
+              </div>
+        
+              <!-- Modal body -->
+              <div class="modal-body">
+                <label for="" class="form-label">Health Condition/s: </label>
+                <br>
+                <input type="text" class="form-control">
+                <input type="text" class="form-control">
+                <input type="text" class="form-control">
+              </div>
+        
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+              </div>
+
+
+
+
+              <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

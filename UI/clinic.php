@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +11,6 @@
     <title>Homepage</title>
 </head>
 <style>
-      body{
-    background-image: linear-gradient(to right, skyblue, blue); /* Gradient background */
-      }
       .image-gallery {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -41,14 +40,14 @@
         <li><a href="clinic.php">Clinic Staff</a></li>
         <li><a href="request.php">My Request</a></li>
         <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
-        <li><a href="login.php">Log out</a></li>
+        <li><a href="logout.php">Log out</a></li>
         </ul>
     </div>
 
     <section class="image-gallery container">
-        <div><img src="../img/pp.jpg" alt="Image 1"><h3 class="text-center mt-2">Respondent</h3></div>
-        <div><img src="../img/pp.jpg" alt="Image 2"><h3 class="text-center mt-2">Nurse</h3></div>
-        <div><img src="../img/pp.jpg" alt="Image 3"><h3 class="text-center mt-2">Respondet</h3></div>
+        <div><img src="../img/pp.png" alt="Image 1"><h3 class="text-center mt-2">Respondent</h3></div>
+        <div><img src="../img/pp.png" alt="Image 2"><h3 class="text-center mt-2">Nurse</h3></div>
+        <div><img src="../img/pp.png" alt="Image 3"><h3 class="text-center mt-2">Respondet</h3></div>
     </section>
 
 

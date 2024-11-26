@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Medicine</title>
 </head>
-<style>
-    body{
-    background-image: linear-gradient(to right, skyblue, blue); /* Gradient background */
-    }
-
-</style>
 <body>
     <div class="navbar bg-dark">
         <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
@@ -23,7 +20,7 @@
         <li><a href="clinic.php">Clinic Staff</a></li>
         <li><a href="request.php">My Request</a></li>
         <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
-        <li><a href="login.php">Log out</a></li>
+        <li><a href="logout.php">Log out</a></li>
         </ul>
     </div>
     <br>
@@ -44,7 +41,7 @@
                     <td>Biogesic</td>
                     <td>Analgesic and antipyretic medication.</td>
                     <td>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Request</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" style="border-radius: 3px;">Request</button>
                     </td>
                 </tr>
             </tbody>
@@ -56,17 +53,17 @@
           
                 <!-- Modal Header -->
                 <div class="modal-header">
-                  <h4 class="modal-title">Modal Heading</h4>
+                  <h4 class="modal-title">Type your reason here!</h4>
                 </div>
           
                 <!-- Modal body -->
                 <div class="modal-body">
-                  Modal body..
+                  <textarea class="form-control" rows="3"></textarea>
                 </div>
           
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" style="border-radius: 3px; width: 90px;">Close</button>
                 </div>
 
 

@@ -1,10 +1,16 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+    </head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,41 +59,8 @@
         .container{
             margin-left: 17%;
         }
-
-        input[type="search"] {
-            margin-left: 20%;
-            width: 500px;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid black;
-            border-radius: 10px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        /* Change border color and add shadow on focus */
-        input[type="search"]:focus {
-            border-color: #007BFF;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        }
-
-        /* Styling the placeholder text */
-        input[type="search"]::placeholder {
-            color: #888;
-            font-style: italic;
-        }
-
-        /* Customizing the clear button in WebKit browsers */
-        input[type="search"]::-webkit-search-cancel-button {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            background-image: url('../img/cancel.png'); /* Customize with your own image */
-            background-size: contain;
-            cursor: pointer;
-        }
     </style>
-</head>
+
 <body>
     <div class="sidebar">
     <center><a href="adDashboard.php"><img src="../img/phoenix.jpg" alt="" style="width: 180px; height: 80px; border-radius: 5px;"></a></center>
@@ -105,26 +78,16 @@
     <br>
     <br>
     <br><br><br>
-    <button class="btn btn-success" style="float: right; margin-right: 10%; height: 50px">+ add medicine</button>
-    
-        <input type="search" name="search" id="" placeholder="search">
-        <label for="" style="font-size: 25px; margin-left: 5%;">Course: </label>
-        <select name="course" id="" style="height: 40px; background-color: grey; border-radius: 5px;">
-            <option value="BSIT">BSIT</option>
-            <option value="BSHM">BSHM</option>
-            <option value="BEED">BEED</option>
-            <option value="BSED">BSED</option>
-        </select>
 
     <div class="container mt-5">
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
                     <th>Name</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Email</th>
-                    <th>Date</th>
+                    <th>Medicine</th>
+                    <th>Description</th>
+                    <th>Reason</th>
+                    <th>Expiration Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -135,7 +98,21 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
+                    <td>
+                    <button class="btn btn-primary w-25">Accept</button>
+                    <button class="btn btn-danger w-25">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
+
+
+
+
+
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

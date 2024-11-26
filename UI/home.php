@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,15 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Homepage</title>
 </head>
-<style>
-      body{
-    background-image: linear-gradient(to right, skyblue, blue); /* Gradient background */
-
-      }
-      input[text="text"]{
-        margin-right: 20%;
-      }
-</style>
 <body>
     <div class="navbar bg-dark">
         <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
@@ -26,7 +21,7 @@
         <li><a href="clinic.php">Clinic Staff</a></li>
         <li><a href="request.php">My Request</a></li>
         <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
-        <li><a href="login.php">Log out</a></li>
+        <li><a href="logout.php">Log out</a></li>
         </ul>
     </div>
         <h1 class="bg-dark" style="width: 30%; text-align: center; position: relative; margin-top: 2%; margin-left: 900px; color: white;">MONITORED STUDENTS</h1>
@@ -89,14 +84,13 @@
         
               <!-- Modal footer -->
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" data-bs-dismiss="modal" style="border-radius: 3px; width: 90px;">Close</button>
               </div>
 
 
 
           
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </html>

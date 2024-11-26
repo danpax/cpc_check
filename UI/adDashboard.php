@@ -1,10 +1,15 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,17 +55,33 @@
         .sidebar a:hover {
             background-color: #ddd;
         }
-        .container{
-            margin-left: 17%;
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            margin-top: 20px;
         }
+
+        .content h1 {
+            color: #333;
+            margin-bottom: 2 rem;
+        }
+        .double-color {
+            margin-top: 100px;
+            margin-left: 120px;
+            font-weight: bold;
+            font-size: 60px; /* Adjust as needed */
+            color: #0a07f1; /* Primary text color */
+            text-shadow: 2px 2px 0 #e06ecd, /* First shadow color */
+                        -2px -2px 0 #e06ecd; /* Second shadow color */
+        }
+
     </style>
-</head>
 <body>
     <div class="sidebar">
     <center><a href="adDashboard.php"><img src="../img/phoenix.jpg" alt="" style="width: 180px; height: 80px; border-radius: 5px;"></a></center>
-        <h3>CPC CHECK</h3>
+        <h2>CPC CHECK</h2>
         <h5>Nurse Panel</h5>
-        <br>
         <ul>
             <li><a href="adInventory.php" class="text-decoration-none">Inventory</a></li>
             <li><a href="adRequest.php" class="text-decoration-none">Student Request</a></li>
@@ -69,34 +90,18 @@
             <li><a href="adMonitoring.php" class="text-decoration-none">Monitored Student</a></li>
         </ul>
     </div>
-    <br>
-    <br>
-    <br><br><br>
+    <button class="btn btn-secondary" style="float: right; margin-right: 20px;" onclick="window.location.href='logout.php'">Log out</button>
+    <div class="content">
+        <h1>Welcome to the dashboard!</h1>
+    </div>
 
-    <div class="container mt-5">
-        <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Medicine</th>
-                    <th>Stock</th>
-                    <th>Description</th>
-                    <th>Reason</th>
-                    <th>Expiration Date</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div style="margin-left: 15%;">
+    <p class="double-color">Your Partner in Health <br>and Wellness</p>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

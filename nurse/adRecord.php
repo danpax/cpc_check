@@ -2,15 +2,15 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<!-- <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     
-</head>
+</head> -->
     <style>
-        body {
+        /* body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
@@ -53,7 +53,7 @@
 
         .sidebar a:hover {
             background-color: #ddd;
-        }
+        } */
         .container{
             margin-left: 17%;
         }
@@ -91,7 +91,7 @@
             cursor: pointer;
         }
     </style>
-<body>
+<!-- <body>
     <div class="sidebar">
     <center><a href="adDashboard.php"><img src="../img/phoenix.jpg" alt="" style="width: 180px; height: 80px; border-radius: 5px;"></a></center>
         <h3>CPC CHECK</h3>
@@ -104,10 +104,13 @@
             <li><a href="adRecord.php" class="text-decoration-none">Student Record</a></li>
             <li><a href="adMonitoring.php" class="text-decoration-none">Monitored Student</a></li>
         </ul>
-    </div>
+    </div> -->
     <br>
     <br>
     <br><br><br>
+
+    <?php include 'navbar.php';?>
+
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal" style="float: right; margin-right: 10%; height: 50px">+ add Student</button>
     
         <input type="search" name="search" id="" placeholder="search">
@@ -205,16 +208,5 @@
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
               </div>
 
-
-
-
-
-
-
-
-
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
+              
 </html>

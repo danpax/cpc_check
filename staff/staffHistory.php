@@ -10,6 +10,8 @@
 
     <?php include 'index.php';?>
 
+    <div class="background"></div>
+
 
     <div class="container mt-5">
         <table class="table table-striped table-bordered">

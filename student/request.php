@@ -1,4 +1,10 @@
-
+<?php
+session_start();
+if (!isset($_SESSION["id_number"])) {
+    header("Location: ../login.php");
+    exit(); // Redirect to login if not authenticated
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,20 +27,34 @@
     top: 0%;
     z-index: -1;
     }
+    @media (max-width: 768px) {
+    .background{
+        height: 100%;
+        width: 100%;
+        background-position: center center;
+    }
+}
 
 </style>
 <body>
-    <div class="navbar bg-dark">
-        <div><a href="home.php"><img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px;"></a></div>
-        <ul>
+<div class="navbar bg-dark">
+    <div>
+        <a href="home.php">
+            <img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px; margin-right: 5px;">
+        </a>
+    </div>
+    <button class="toggle-btn" onclick="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <ul class="nav-links">
         <li><a href="home.php">Home</a></li>
         <li><a href="medicine.php">Medicine</a></li>
         <li><a href="clinic.php">Clinic Staff</a></li>
         <li><a href="request.php">My Request</a></li>
-        <a href="notification.php"><i class='fas fa-bell' style='font-size:24px;'></i></a>
+        <li><a href="notification.php"><i class="fas fa-bell" style="font-size:24px;"></i></a></li>
         <li><a href="logout.php">Log out</a></li>
-        </ul>
-    </div>
+    </ul>
+</div>
 
     <div class="background"></div>
     
@@ -55,6 +75,13 @@
                 </tr>
             </tbody>
         </table>
+
+        <script>
+                function toggleMenu() {
+                    const navLinks = document.querySelector('.nav-links');
+                     navLinks.classList.toggle('active');
+                  }
+              </script>
 
     
 </body>

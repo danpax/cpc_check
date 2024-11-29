@@ -1,45 +1,15 @@
-
+<?php
+session_start();
+if (!isset($_SESSION["id_number"])) {
+    header("Location: login.php");
+    exit(); // Redirect to login if not authenticated
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 
-  <style>
-        .container{
-            margin-left: 17%;
-        }
-        input[type="search"] {
-            margin-left: 20%;
-            width: 500px;
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid black;
-            border-radius: 10px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
 
-        /* Change border color and add shadow on focus */
-        input[type="search"]:focus {
-            border-color: #007BFF;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-        }
-
-        /* Styling the placeholder text */
-        input[type="search"]::placeholder {
-            color: #888;
-            font-style: italic;
-        }
-
-        /* Customizing the clear button in WebKit browsers */
-        input[type="search"]::-webkit-search-cancel-button {
-            -webkit-appearance: none;
-            height: 16px;
-            width: 16px;
-            background-image: url('../img/cancel.png'); /* Customize with your own image */
-            background-size: contain;
-            cursor: pointer;
-        }
-        
     </style>
         <br>
         <br>

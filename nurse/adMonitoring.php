@@ -1,15 +1,15 @@
-
+<?php
+session_start();
+if (!isset($_SESSION["id_number"])) {
+    header("Location: login.php");
+    exit(); // Redirect to login if not authenticated
+}
+?>
 
 
 <!DOCTYPE html>
 <html lang="en">
 
-    <style>
-        .container{
-            margin-left: 17%;
-        }
-        
-    </style>
     <br>
     <br>
     <br><br><br>
@@ -24,12 +24,10 @@
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Date of Birth</th>
                     <th>Parent/Guadian</th>
-                    <th>Phone#</th>
-                    <th>Email</th>
                     <th>Emergencey#</th>
-                    <th>Action</th>
+                    <th>action</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,10 +36,8 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td><i class="fa fa-eye" data-bs-toggle="modal" data-bs-target="#myModal" style="cursor: pointer;"></i></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

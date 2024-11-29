@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
     <style>
         body {
@@ -52,6 +54,11 @@
             background-color: #ddd;
         }
 
+        .sidebar a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        
         .content {
             margin-left: 250px;
             padding: 20px;
@@ -85,6 +92,39 @@
         .container{
             margin-left: 17%;
         }
+
+        input[type="search"] {
+            margin-left: 20%;
+            width: 500px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid black;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Change border color and add shadow on focus */
+        input[type="search"]:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Styling the placeholder text */
+        input[type="search"]::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Customizing the clear button in WebKit browsers */
+        input[type="search"]::-webkit-search-cancel-button {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            background-image: url('../img/cancel.png'); /* Customize with your own image */
+            background-size: contain;
+            cursor: pointer;
+        }
     </style>
 <body>
     <div class="sidebar">
@@ -92,14 +132,45 @@
         <h2>CPC CHECK</h2>
         <h5>Nurse Panel</h5>
         <ul>
-            <li><a href="adInventory.php" class="text-decoration-none">Inventory</a></li>
+            <li><a href="adMedicine.php" class="text-decoration-none">Medicine</a></li>
             <li><a href="adRequest.php" class="text-decoration-none">Student Request</a></li>
             <li><a href="adHistory.php" class="text-decoration-none">Student History</a></li>
-            <li><a href="adRecord.php" class="text-decoration-none">Student Record</a></li>
+            <li><a href="adRecord.php" class="text-decoration-none">Student Info</a></li>
             <li><a href="adMonitoring.php" class="text-decoration-none">Monitored Student</a></li>
         </ul>
-        
     </div>
+
+    <script>
+    // Get all the navigation links
+    const navItems = document.querySelectorAll('.sidebar li a');
+
+    // Function to set active link based on local storage
+    function setActiveLink() {
+        const activeLink = localStorage.getItem('activeLink');
+        if (activeLink) {
+            navItems.forEach(item => {
+                if (item.href === activeLink) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    }
+
+    // Set the active link on page load
+    setActiveLink();
+
+    // Add a click event listener to each nav item
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove "active" class from all items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            // Add "active" class to the clicked item
+            item.classList.add('active');
+            // Store the active link in local storage
+            localStorage.setItem('activeLink', item.href);
+        });
+    });
+</script>
     
 
     <div class="background"></div>

@@ -8,6 +8,7 @@
     <br>
     <br>
     <br><br><br>
+    <div class="background"></div>
     
     <?php include 'index.php';?>
     
@@ -18,12 +19,10 @@
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
-                    <th>Date of Birth</th>
                     <th>Parent/Guadian</th>
-                    <th>Phone#</th>
-                    <th>Email</th>
                     <th>Emergencey#</th>
                     <th>Action</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,10 +31,8 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td><i class="fa fa-eye" data-bs-toggle="modal" data-bs-target="#myModal" style="cursor: pointer;"></i></td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>

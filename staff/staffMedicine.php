@@ -9,6 +9,7 @@
         <br>
         <br>
         <br>
+        <div class="background"></div>
 
     <?php include 'index.php';?>
 

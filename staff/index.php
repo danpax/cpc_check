@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
     <style>
         body {
@@ -52,6 +54,11 @@
             background-color: #ddd;
         }
 
+        .sidebar a.active {
+            background-color: #ddd;
+            font-weight: bold;
+        }
+        
         .content {
             margin-left: 250px;
             padding: 20px;
@@ -125,13 +132,47 @@
         <h2>CPC CHECK</h2>
         <h5>Staff Panel</h5>
         <ul>
-            <li><a href="staffInventory.php" class="text-decoration-none">Inventory</a></li>
+            <li><a href="staffMedicine.php" class="text-decoration-none">Medicine</a></li>
             <li><a href="staffRequest.php" class="text-decoration-none">Student Request</a></li>
             <li><a href="staffHistory.php" class="text-decoration-none">Student History</a></li>
-            <li><a href="staffRecord.php" class="text-decoration-none">Student Record</a></li>
+            <li><a href="staffRecord.php" class="text-decoration-none">Student Info</a></li>
             <li><a href="staffMonitoring.php" class="text-decoration-none">Monitored Student</a></li>
         </ul>
     </div>
+
+    <script>
+    // Get all the navigation links
+    const navItems = document.querySelectorAll('.sidebar li a');
+
+    // Function to set active link based on local storage
+    function setActiveLink() {
+        const activeLink = localStorage.getItem('activeLink');
+        if (activeLink) {
+            navItems.forEach(item => {
+                if (item.href === activeLink) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    }
+
+    // Set the active link on page load
+    setActiveLink();
+
+    // Add a click event listener to each nav item
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove "active" class from all items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            // Add "active" class to the clicked item
+            item.classList.add('active');
+            // Store the active link in local storage
+            localStorage.setItem('activeLink', item.href);
+        });
+    });
+</script>
+
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     

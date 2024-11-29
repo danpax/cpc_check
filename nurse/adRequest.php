@@ -1,15 +1,16 @@
-
+<?php
+session_start();
+if (!isset($_SESSION["id_number"])) {
+    header("Location: login.php");
+    exit(); // Redirect to login if not authenticated
+}
+?>
 
 
 
 <!DOCTYPE html>
 <html lang="en">
 
-    <style>
-        .container{
-            margin-left: 17%;
-        }
-    </style>
 
     <br>
     <br>
@@ -26,6 +27,7 @@
                     <th>Description</th>
                     <th>Reason</th>
                     <th>Expiration Date</th>
+                    <th>Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -36,9 +38,10 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>
                     <button class="btn btn-primary w-25">Accept</button>
-                    <button class="btn btn-danger w-25">Delete</button>
+                    <button class="btn btn-danger w-25">Decline</button>
                     </td>
                 </tr>
             </tbody>

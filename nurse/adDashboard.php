@@ -1,11 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION["id_number"])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit(); // Redirect to login if not authenticated
 }
 ?>
-
 
 
 <!DOCTYPE html>

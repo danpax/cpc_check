@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 // Add new student
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
     $fields = [
-        'id_number', 'password', 'name', 'phone', 'address', 'email', 'date', 'age',
+        'id_number', 'name', 'phone', 'address', 'email', 'date', 'age',
         'gender', 'civil_status', 'course', 'year_sec', 'vaccine_type',
         'guardian_number', 'student_number', 'parent', 'disability',
         'blood_pressure', 'temperature', 'height', 'weight', 'health_conditions'
@@ -22,11 +22,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
 
     $data = [];
     foreach ($fields as $field) {
-        if ($field === 'password') {
-            $data[$field] = password_hash($_POST[$field], PASSWORD_DEFAULT);
-        } elseif ($field === 'age') {
+        if ($field === 'age') {
             $data[$field] = intval($_POST[$field]);
-        } else {
+            // $data[$field] = password_hash($_POST[$field], PASSWORD_DEFAULT);
+        // } elseif ($field === 'password') {
+        //     $data[$field] = intval($_POST[$field]);
+        }
+         else {
             $data[$field] = $conn->real_escape_string($_POST[$field]);
         }
     }
@@ -34,13 +36,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
     $columns = implode(", ", array_keys($data));
     $values = "'" . implode("', '", $data) . "'";
 
-    $sql = "INSERT INTO students ($columns) VALUES ($values)";
+    // $sql = "INSERT INTO students ($columns) VALUES ($values)";
 
-    if ($conn->query($sql) === TRUE) {
-        $success_message = "New student added successfully";
+    $sql_student = "INSERT INTO students ($columns) VALUES ($values)";
+    
+    if ($conn->query($sql_student) === TRUE) {
+        
+        // Capture the password from the form and hash it
+        $id_number = $_POST['id_number'];
+        $password = $_POST['password']; // Get password from the form
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash the password
+        $role = 'student'; // Default role
+
+        // Insert into the 'users' table
+        $sql_user = "INSERT INTO users (id_number, password, role) VALUES ('$id_number', '$hashed_password', '$role')";
+
+        if ($conn->query($sql_user) === TRUE) {
+            // If both insertions are successful
+            $success_message = "New student added successfully and user created!";
+        } else {
+            // If there's an error with the user insert
+            $error_message = "Error creating user: " . $conn->error;
+        }
     } else {
-        $error_message = "Error: " . $conn->error;
+        // Error with student insertion
+        $error_message = "Error adding student: " . $conn->error;
     }
+
+    // if ($conn->query($sql) === TRUE) {
+    //     $success_message = "New student added successfully";
+    // } else {
+    //     $error_message = "Error: " . $conn->error;
+    // }
 }
 
 // Fetch students

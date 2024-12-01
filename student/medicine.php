@@ -1,148 +1,114 @@
 <?php
-session_start();
-if (!isset($_SESSION["id_number"])) {
-    header("Location: ../login.php");
-    exit();
-}
 
-// Database connection
-$conn = new mysqli("localhost", "root", "", "clinic");
+include 'navbar.php'; 
+include '../db.php';
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Handle medicine request
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['request_medicine'])) {
-    $medicine_id = intval($_POST['medicine_id']);
-    $reason = $conn->real_escape_string($_POST['reason']);
-    $student_id = $_SESSION["id_number"];
-    
-    $sql = "INSERT INTO medicine_requests (medicine_id, student_id, reason, request_date) VALUES ($medicine_id, '$student_id', '$reason', NOW())";
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Request submitted successfully!');</script>";
+// Check if the form is submitted
+if (isset($_POST['submit_request'])) {
+    // Get form data
+    $student_id = $_SESSION['id_number'];  // Accessing session variable
+    $reason = $_POST['reason']; // Reason is the 'symptoms' textarea input
+    $request_date = $_POST['request_date'];
+    $status = $_POST['status']; // Default value is 'pending'
+
+    // Prepare the SQL statement to insert the data
+    $sql = "INSERT INTO medicine_requests (student_id, reason, request_date, status) 
+            VALUES (?, ?, ?, ?)";
+
+    if ($stmt = $conn->prepare($sql)) {
+        $stmt->bind_param("isss", $student_id, $reason, $request_date, $status);
+        
+        if ($stmt->execute()) {
+            $message = "Your request has been successfully submitted!";
+        } else {
+            $message = "There was an error submitting your request.";
+        }
+
+        $stmt->close();
     } else {
-        echo "<script>alert('Error submitting request. Please try again.');</script>";
+        $message = "SQL preparation error.";
     }
+
+    $conn->close();
 }
 
-// Fetch medicines
-$sql = "SELECT * FROM medicines WHERE stock > 0 AND expiration_date > CURDATE() ORDER BY medicine_name ASC";
-$result = $conn->query($sql);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student - Medicines</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
 <style>
-  .background {
-    position: absolute; /* Use absolute positioning */
-    background-image: url('../img/cpc.png');
-    background-repeat: no-repeat;
-    background-size: cover; /* Ensure the background image covers the entire area */
-    height: 100%;
-    width: 100%;
-    top: 0%;
-    z-index: -1;
-  }
-  @media (max-width: 768px) {
-    .background{
-        height: 100%;
-        width: 100%;
-        background-position: center center;
+    /* Additional Custom Styling */
+    .form-section {
+      margin-top: 2rem;
+      background: #f8f9fa;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-}
-
+    textarea {
+      resize: none;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    textarea:focus {
+      border-color: #0d6efd;
+      outline: none;
+      box-shadow: 0 0 4px rgba(13, 110, 253, 0.25);
+    }
+   
+    button.primary:hover {
+      background-color: #0056b3;
+    }
+    h1, p {
+      text-align: center;
+    }
 </style>
+</head>
 <body>
-<div class="navbar bg-dark">
-    <div>
-        <a href="home.php">
-            <img src="../img/phoenix.jpg" style="width: 70px; height: 70px; object-fit: cover; border-radius: 50px; margin-right: 5px;">
-        </a>
-    </div>
-    <button class="toggle-btn" onclick="toggleMenu()">
-        <i class="fas fa-bars"></i>
-    </button>
-    <ul class="nav-links">
-        <li><a href="home.php">Home</a></li>
-        <li><a href="medicine.php">Medicine</a></li>
-        <li><a href="clinic.php">Clinic Staff</a></li>
-        <li><a href="request.php">My Request</a></li>
-        <li><a href="notification.php"><i class="fas fa-bell" style="font-size:24px;"></i></a></li>
-        <li><a href="../logout.php">Logout</a></li>
-    </ul>
-</div>
+  <main class="container">
+    <h1>Request Treatment from the Nurse</h1>
+    <p>
+      Briefly describe why you need treatment. The nurse will review your request and respond accordingly.
+    </p>
 
-<div class="container mt-5">
-        <input type="search" id="search" placeholder="Search" onkeyup="searchMedicines()">
+    <div class="form-section">
+      <form method="POST" action="">
+        <label for="reason"><strong>Describe Your Symptoms</strong></label>
+        <textarea 
+          id="reason" 
+          name="reason" 
+          placeholder="Write your symptoms or issue here..." 
+          rows="5" 
+          required>
+        </textarea>
         
-        <table class="table table-striped table-bordered" id="medicineTable">
-            <thead class="table-dark">
-                <tr>
-                    <th>Medicine</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td>" . htmlspecialchars($row['medicine_name']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                        echo "<td><button class='btn btn-primary' data-bs-toggle='modal' data-bs-target='#requestModal" . $row['id'] . "'>Request</button></td>";
-                        echo "</tr>";
-                        
-                        // Modal for each medicine
-                        echo "<div class='modal' id='requestModal" . $row['id'] . "'>";
-                        echo "<div class='modal-dialog'><div class='modal-content'>";
-                        echo "<div class='modal-header'><h4 class='modal-title'>Request " . htmlspecialchars($row['medicine_name']) . "</h4></div>";
-                        echo "<div class='modal-body'>";
-                        echo "<form method='POST'>";
-                        echo "<input type='hidden' name='medicine_id' value='" . $row['id'] . "'>";
-                        echo "<textarea class='form-control' name='reason' rows='3' placeholder='Enter your reason here' required></textarea>";
-                        echo "<button type='submit' name='request_medicine' class='btn btn-primary mt-3'>Submit Request</button>";
-                        echo "</form></div>";
-                        echo "<div class='modal-footer'><button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button></div>";
-                        echo "</div></div></div>";
-                    }
-                } else {
-                    echo "<tr><td colspan='3'>No medicines available</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+        <!-- Hidden fields -->
+        <input type="hidden" name="student_id" value="<?php echo $_SESSION['id_number']; ?>"> <!-- Dynamically set student_id from session -->
+        <input type="hidden" name="request_date" value="<?php echo date('Y-m-d H:i:s'); ?>"> <!-- Current date-time -->
+        <input type="hidden" name="status" value="pending"> <!-- Default value is 'pending' -->
+
+        <!-- Submit button -->
+        <button type="submit" name="submit_request" class="primary">Submit Request</button>
+      </form>
+
+      <?php if (isset($message)) { echo "<p>$message</p>"; } ?>
     </div>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function searchMedicines() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("medicineTable");
-            tr = table.getElementsByTagName("tr");
+  <script>
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const form = document.getElementById("nurseRequestForm");
+      const symptoms = form.elements["symptoms"].value;
 
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-                if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-    </script>
+      alert(`Your request has been submitted with the following details:\n- Symptoms: ${symptoms}`);
+
+      form.reset(); // Clear the form after submission
+    }
+  </script>
 </body>
 </html>

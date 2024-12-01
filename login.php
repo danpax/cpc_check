@@ -18,30 +18,41 @@ if (isset($_POST['login_user'])) {
     if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
 
-        // Verify the password (if stored in plain text, compare directly)
-        if ($password === $user['password']) {
-            // Set session variables
+        // Check if the role is 'nurse', bypass password verification for nurse
+        if ($role == 'nurse') {
+            // Directly log in the nurse without password verification
             $_SESSION['id_number'] = $user['id_number'];
+            $_SESSION['name'] = $user['name'];
             $_SESSION['role'] = $user['role'];
-            $_SESSION['success_message'] = 'Successfully logged in!';
+            $_SESSION['success_message'] = 'Successfully logged in as Nurse!';
 
-            // Redirect user based on role
-            switch ($user['role']) {
-                case 'student':
-                    header('Location: student/home.php');
-                    break;
-                case 'nurse':
-                    header('Location: nurse/adDashboard.php');
-                    break;
-                case 'staff':
-                    header('Location: staff/staffdashboard.php');
-                    break;
-                default:
-                    $error = "Invalid role.";
-            }
+            // Redirect nurse to their dashboard
+            header('Location: nurse/adDashboard.php');
             exit();
         } else {
-            $error = "Incorrect password.";
+            // For other roles, verify the password using password_verify
+            if (password_verify($password, $user['password'])) {
+                // Set session variables for successful login
+                $_SESSION['id_number'] = $user['id_number'];
+                $_SESSION['name'] = $user['name'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['success_message'] = 'Successfully logged in!';
+
+                // Redirect user based on role
+                switch ($user['role']) {
+                    case 'student':
+                        header('Location: student/home.php');
+                        break;
+                    case 'staff':
+                        header('Location: staff/staffdashboard.php');
+                        break;
+                    default:
+                        $error = "Invalid role.";
+                }
+                exit();
+            } else {
+                $error = "Incorrect password.";
+            }
         }
     } else {
         $error = "User not found or role mismatch.";

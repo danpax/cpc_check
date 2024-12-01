@@ -2,36 +2,112 @@
 session_start();
 if (!isset($_SESSION["id_number"])) {
     header("Location: ../login.php");
-    exit(); // Redirect to login if not authenticated
+    exit();
 }
+
+// Database connection
+$conn = new mysqli("localhost", "root", "", "clinic");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Add new student
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_student'])) {
+    $fields = [
+        'id_number', 'password', 'name', 'phone', 'address', 'email', 'date', 'age',
+        'gender', 'civil_status', 'course', 'year_sec', 'vaccine_type',
+        'guardian_number', 'student_number', 'parent', 'disability',
+        'blood_pressure', 'temperature', 'height', 'weight', 'health_conditions'
+    ];
+
+    $data = [];
+    foreach ($fields as $field) {
+        if ($field === 'password') {
+            $data[$field] = password_hash($_POST[$field], PASSWORD_DEFAULT);
+        } elseif ($field === 'age') {
+            $data[$field] = intval($_POST[$field]);
+        } else {
+            $data[$field] = $conn->real_escape_string($_POST[$field]);
+        }
+    }
+
+    $columns = implode(", ", array_keys($data));
+    $values = "'" . implode("', '", $data) . "'";
+
+    $sql = "INSERT INTO students ($columns) VALUES ($values)";
+
+    if ($conn->query($sql) === TRUE) {
+        $success_message = "New student added successfully";
+    } else {
+        $error_message = "Error: " . $conn->error;
+    }
+}
+
+// Fetch students
+$search = isset($_GET['search']) ? $conn->real_escape_string($_GET['search']) : '';
+$course_filter = isset($_GET['course']) ? $conn->real_escape_string($_GET['course']) : '';
+
+$sql = "SELECT * FROM students WHERE 1=1";
+if (!empty($search)) {
+    $sql .= " AND (name LIKE '%$search%' OR id_number LIKE '%$search%')";
+}
+if (!empty($course_filter)) {
+    $sql .= " AND course = '$course_filter'";
+}
+$sql .= " ORDER BY name ASC";
+
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 
-    <br>
-    <br>
-    <br><br><br>
+
 
     <?php include 'navbar.php';?>
 
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal" style="float: right; margin-right: 10%; height: 50px">+ add Student</button>
-    
-        <input type="search" name="search" id="" placeholder="search">
-        <label for="" style="font-size: 25px; margin-left: 5%;">Course: </label>
-        <select name="course" id="" style="height: 40px; background-color: grey; border-radius: 5px;">
-            <option value="BSIT">BSIT</option>
-            <option value="BSHM">BSHM</option>
-            <option value="BEED">BEED</option>
-            <option value="BSED">BSED</option>
-        </select>
-
     <div class="container mt-5">
+        <h2 class="mb-4">Student Records</h2>
+        
+        <?php if (isset($success_message)): ?>
+            <div class="alert alert-success" role="alert">
+                <?php echo $success_message; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo $error_message; ?>
+            </div>
+        <?php endif; ?>
+
+        <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addStudentModal">+ Add Student</button>
+        
+        <form method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="search" name="search" class="form-control" placeholder="Search by name or ID" value="<?php echo htmlspecialchars($search); ?>">
+                </div>
+                <div class="col-md-5" style="margin-left: 150px;">
+                    <select name="course" class="form-control">
+                        <option value="">All Courses</option>
+                        <option value="BSIT" <?php echo $course_filter == 'BSIT' ? 'selected' : ''; ?>>BSIT</option>
+                        <option value="BSHM" <?php echo $course_filter == 'BSHM' ? 'selected' : ''; ?>>BSHM</option>
+                        <option value="BEED" <?php echo $course_filter == 'BEED' ? 'selected' : ''; ?>>BEED</option>
+                        <option value="BSED" <?php echo $course_filter == 'BSED' ? 'selected' : ''; ?>>BSED</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
         <table class="table table-striped table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>Id number</th>
+                    <th>ID Number</th>
                     <th>Name</th>
                     <th>Phone</th>
                     <th>Address</th>
@@ -41,83 +117,177 @@ if (!isset($_SESSION["id_number"])) {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><button class="btn btn-primary">view</button><button class="btn btn-dark">monitor</button></td>
-                </tr>
+                <?php
+                if ($result && $result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['id_number']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['name']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['phone']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['address']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                        echo "<td>
+                                <button class='btn btn-primary btn-sm' onclick='viewStudent(\"" . $row['id_number'] . "\")'>View</button>
+                                <button class='btn btn-dark btn-sm' onclick='monitorStudent(\"" . $row['id_number'] . "\")'>Monitor</button>
+                              </td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='7'>No students found</td></tr>";
+                }
+                ?>
             </tbody>
         </table>
+    </div>
 
+    <!-- Add Student Modal -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">Add New Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_number" class="form-label">ID Number:</label>
+                                <input type="text" class="form-control" id="id_number" name="id_number" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password:</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Phone:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="date" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="date" name="date">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age:</label>
+                                <input type="number" class="form-control" id="age" name="age">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Gender:</label>
+                                <select class="form-control" id="gender" name="gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="civil_status" class="form-label">Civil Status:</label>
+                                <select class="form-control" id="civil_status" name="civil_status">
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Divorced">Divorced</option>
+                                    <option value="Widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="course" class="form-label">Course:</label>
+                                <select class="form-control" id="course" name="course">
+                                    <option value="BSIT">BSIT</option>
+                                    <option value="BSHM">BSHM</option>
+                                    <option value="BEED">BEED</option>
+                                    <option value="BSED">BSED</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="year_sec" class="form-label">Year and Section:</label>
+                                <input type="text" class="form-control" id="year_sec" name="year_sec">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="vaccine_type" class="form-label">Vaccine Type:</label>
+                                <input type="text" class="form-control" id="vaccine_type" name="vaccine_type">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="guardian_number" class="form-label">Guardian Number:</label>
+                                <input type="tel" class="form-control" id="guardian_number" name="guardian_number">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="student_number" class="form-label">Student Number:</label>
+                                <input type="tel" class="form-control" id="student_number" name="student_number">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="parent" class="form-label">Parent:</label>
+                            <input type="text" class="form-control" id="parent" name="parent">
+                        </div>
+                        <div class="mb-3">
+                            <label for="disability" class="form-label">Disability:</label>
+                            <input type="text" class="form-control" id="disability" name="disability">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="blood_pressure" class="form-label">Blood Pressure:</label>
+                                <input type="text" class="form-control" id="blood_pressure" name="blood_pressure">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="temperature" class="form-label">Temperature:</label>
+                                <input type="text" class="form-control" id="temperature" name="temperature">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="height" class="form-label">Height:</label>
+                                <input type="text" class="form-control" id="height" name="height">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="weight" class="form-label">Weight:</label>
+                                <input type="text" class="form-control" id="weight" name="weight">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="health_conditions" class="form-label">Health Conditions:</label>
+                            <textarea class="form-control" id="health_conditions" name="health_conditions" rows="3"></textarea>
+                        </div>
+                        <button type="submit" name="add_student" class="btn btn-primary">Add Student</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function viewStudent(id) {
+            window.location.href = 'view_student.php?id=' + id;
+        }
 
-        <div class="modal" id="myModal">
-          <div class="modal-dialog">
-            <div class="modal-content" style="max-width: 700px; min-width: 700px;">
-        
-              <!-- Modal Header -->
-              <div class="modal-header">
-                <h4 class="modal-title">Background Information</h4>
-              </div>
-        
-              <!-- Modal body -->
-              <div class="modal-body">
-                <label for="" class="form-label">Id number: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">password: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Name: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Phone#: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Address: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Email: </label>
-                <input type="email" class="form-control">
-                <label for="" class="form-label">Date: </label>
-                <input type="date" class="form-control">
-                <label for="" class="form-label">Age: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Gender: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Civil Status: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Course: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Year and Sec: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Vaccine Type: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Guardian #: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Student #: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Parent: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Disability: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Blood pressure: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Temperature: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Height: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Weight: </label>
-                <input type="text" class="form-control">
-                <label for="" class="form-label">Health Condition/s: </label>
-                <br>
-                <input type="text" class="form-control">
-                <input type="text" class="form-control">
-              </div>
-        
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-              </div>
+        function monitorStudent(id) {
+            window.location.href = 'monitor_student.php?id=' + id;
+        }
+    </script>
 
               
 </html>

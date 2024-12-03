@@ -1,0 +1,174 @@
+body{
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Navbar styling */
+.navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 10;
+}
+
+.navbar .nav-links {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .nav-links li {
+    margin-right: 15px;
+}
+
+.navbar .nav-links a {
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+.navbar .nav-links a:hover {
+    color: black;
+}
+
+.navbar .toggle-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.navbar .toggle-btn:focus {
+    outline: none;
+}
+
+.navbar .nav-links li:last-child {
+    margin-right: 0;
+}
+
+@media (max-width: 768px) {
+    .navbar .nav-links {
+        display: none;
+        flex-direction: column;
+        background-color: #343a40;
+        position: absolute;
+        top: 85px;
+        left: 0;
+        width: 100%;
+        padding: 10px 0;
+        z-index: 1; /* Ensure it stays above the content */
+    }
+
+    .navbar .nav-links.active {
+        display: flex;
+    }
+
+    .navbar .nav-links li {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    .navbar .toggle-btn {
+        display: block;
+    }
+}
+
+.table-container {
+    width: 90%;
+    margin: 20px auto;
+    overflow-x: auto;
+    margin-bottom: 80px; /* Add space to prevent table overlap with the fixed navbar */
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    text-align: left;
+    padding: 8px;
+}
+
+@media (max-width: 768px) {
+    .table th, .table td {
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .double-color {
+        font-size: 1rem;
+    }
+}
+
+.double-color {
+    margin-top: 100px;
+    margin-left: 120px;
+    font-weight: bold;
+    font-size: 40px; /* Adjust as needed */
+    color: #0a07f1; /* Primary text color */
+    text-shadow: 2px 2px 0 #000000, /* bottom shadow color */
+                 -2px -2px 0 #7e7e7e; /* top shadow color */
+}
+th, td{
+    border: 1px solid black;
+}
+
+  input[type="search"] {
+    margin-left: 10%;
+    width: 500px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+
+  /* Change border color and add shadow on focus */
+  input[type="search"]:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  }
+
+  /* Styling the placeholder text */
+  input[type="search"]::placeholder {
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Customizing the clear button in WebKit browsers */
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    background-image: url('../img/cancel.png'); /* Customize with your own image */
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    input[type="search"] {
+        width: 60%;          /* Make it fill the width of the container */
+        height: 35px;         /* Increase height for better visibility and usability */
+        font-size: 16px;      /* Increase font size for better readability */
+        padding: 20px;         /* Add padding to make it more user-friendly */
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+        background-position: left center; /* If you use an icon inside the search input */
+    }
+}

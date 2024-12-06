@@ -1,7 +1,5 @@
 <?php
 include 'navbar.php';
-
-// Database connection
 include '../db.php';
 
 // Handle request actions (Accept/Decline)

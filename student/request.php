@@ -1,6 +1,6 @@
 <?php
 
-include 'navbar.php'; 
+include 'navbar.php';
 include '../db.php';
 
 if ($conn->connect_error) {
@@ -14,14 +14,13 @@ if (isset($_POST['submit_request'])) {
     $reason = $_POST['reason']; // Reason is the 'symptoms' textarea input
     $created_at = $_POST['created_at'];
     $status = $_POST['status']; // Default value is 'pending'
-    echo($reason);
     // Prepare the SQL statement to insert the data
     $sql = "INSERT INTO requests (user_id, reason, created_at, status) 
             VALUES (?, ?, ?, ?)";
 
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("isss", $user_id, $reason, $created_at, $status);
-        
+
         if ($stmt->execute()) {
             $message = "Your request has been successfully submitted!";
         } else {
@@ -36,78 +35,113 @@ if (isset($_POST['submit_request'])) {
     $conn->close();
 }
 
-?>
-  <style>
-    /* Custom Styling */
+?><style>
+/* General Styles */
+
+
+/* Form Section Styling */
+.form-section {
+    margin-top: 2rem;
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+    resize: none;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+textarea:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+}
+
+/* Button Styling */
+.primary {
+    background-color: #0d6efd;
+    color: #ffffff;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.primary:focus {
+    outline: none;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+}
+
+/* Feedback Message Styling */
+.feedback-message {
+    margin-top: 1rem;
+    color: #28a745;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Typography */
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    color: #0d6efd;
+}
+
+p {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #6c757d;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
     .form-section {
-      margin-top: 2rem;
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
     }
 
-    textarea {
-      resize: none;
-      font-size: 1rem;
-      border: 1px solid #ced4da;
-      padding: 10px;
-      border-radius: 5px;
+    h2 {
+        font-size: 1.5rem;
     }
 
-    textarea:focus {
-      border-color: #0d6efd;
-      outline: none;
-      box-shadow: 0 0 4px rgba(13, 110, 253, 0.25);
+    .primary {
+        font-size: 0.9rem;
     }
+}
+</style>
 
-    button.primary {
-      background-color: #0d6efd;
-      color: #ffffff;
-      padding: 10px 20px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    button.primary:hover {
-      background-color: #0056b3;
-    }
-
-    .feedback-message {
-      margin-top: 1rem;
-      color: #28a745;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    h1, p {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-  </style>
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Request Treatment from the Nurse</h2>
-    <p>
-      Briefly describe why you need treatment. The nurse will review your request and respond accordingly.
-    </p>
+<h2>Request Treatment from the Nurse</h2>
+<p>
+    Briefly describe why you need treatment. The nurse will review your request and respond accordingly.
+</p>
 
-    <div class="form-section">
-      <form method="POST" action="request.php">
+<div class="form-section">
+    <form method="POST" action="request.php">
         <fieldset>
-          <legend><strong>Describe Your Symptoms</strong></legend>
-          <div class="mb-3">
-            <label for="reason" class="form-label">Symptoms or Issue</label>
-            <textarea 
-              id="reason" 
-              name="reason" 
-              class="form-control" 
-              placeholder="Write your symptoms or issue here..." 
-              rows="5" 
-              required>
-            </textarea>
-          </div>
+            <legend class="mb-3"><strong>Describe Your Symptoms</strong></legend>
+            <div class="mb-3">
+                <label for="reason" class="form-label">Symptoms or Issue</label>
+                <textarea
+                    id="reason"
+                    name="reason"
+                    class="form-control"
+                    placeholder="Write your symptoms or issue here..."
+                    rows="5"
+                    required></textarea>
+            </div>
         </fieldset>
 
         <!-- Hidden fields -->
@@ -116,13 +150,15 @@ if (isset($_POST['submit_request'])) {
 
         <!-- Submit button -->
         <div class="d-grid gap-2">
-          <button type="submit" name="submit_request" class="primary">Submit Request</button>
+            <button type="submit" name="submit_request" class="primary">Submit Request</button>
         </div>
-      </form>
+    </form>
 
-      <?php if (isset($message)): ?>
+    <?php if (isset($message)): ?>
         <p class="feedback-message"><?php echo htmlspecialchars($message); ?></p>
-      <?php endif; ?>
-    </div>
+    <?php endif; ?>
+</div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

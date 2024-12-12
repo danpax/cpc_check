@@ -14,7 +14,18 @@ if ($conn->connect_error) {
 $user_id = $_SESSION['user']['id'];
 
 // Fetch visit_at dates for the logged-in user
-$sql = "SELECT id, reason, visit_at FROM requests WHERE user_id = ? AND visit_at IS NOT NULL";
+$sql = "SELECT * FROM appointments 
+INNER JOIN users ON appointments.student_id = users.id
+WHERE student_id = ?";
+
+// $appointment_sql = "SELECT * FROM appointments WHERE student_id = ?";
+// $appointment_stmt = $conn->prepare($appointment_sql);
+// $appointment_stmt->bind_param("i", $user_id);
+// $appointment_stmt->execute();
+// $appointment_result = $appointment_stmt->get_result();
+
+
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -23,7 +34,7 @@ $result = $stmt->get_result();
 $events = [];
 while ($row = $result->fetch_assoc()) {
     $events[] = [
-        'title' => $row['reason'], // Use the 'reason' as the event title
+        'title' => $row['notes'], // Use the 'reason' as the event title
         'start' => $row['visit_at'], // The visit_at date
         'id'    => $row['id'],      // Optional, you can pass the request ID
     ];
@@ -37,7 +48,7 @@ $conn->close();
         <h1 class="text-center">Your Calendar</h1>
         <div id="calendar"></div>
     </div>
-
+    <!-- <?php print_r($appointment_result); ?> -->
     <!-- FullCalendar JS -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/main.min.js"></script> -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>

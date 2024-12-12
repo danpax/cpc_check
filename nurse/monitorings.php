@@ -1,70 +1,69 @@
-<?php 
-include 'navbar.php'; 
-include '../db.php'; 
+<?php
+// Include the database connection and navbar
+include 'navbar.php';
+include '../db.php';
 
-// SQL query to fetch all monitorings with user details and student name
-$query = "
-    SELECT 
-    monitorings.id AS monitoring_id, 
-    users.id AS user_id, 
-    users.id_number, 
-    students.name AS student_name
-FROM monitorings
-JOIN users ON monitorings.user_id = users.id
-LEFT JOIN students ON students.user_id = users.id
-GROUP BY monitorings.id, users.id
-";
-
-$result = mysqli_query($conn, $query);
-
-// Form submission to add a monitoring schedule
-if (isset($_POST['submit_schedule'])) {
-    $monitoring_id = $_POST['monitoring_id'];
-    $schedule_date = $_POST['schedule_date'];
-
-    $insert_query = "INSERT INTO monitoring_schedules (monitoring_id, date) VALUES ('$monitoring_id', '$schedule_date')";
-    if (mysqli_query($conn, $insert_query)) {
-        echo "Schedule added successfully!";
-    } else {
-        echo "Error: " . mysqli_error($conn);
-    }
+// Handle search input
+$search_term = '';
+if (isset($_GET['search'])) {
+    $search_term = $conn->real_escape_string($_GET['search']);
 }
+
+// Query to fetch monitoring data with optional search filter
+$sql_monitorings = "
+    SELECT m.id AS monitoring_id, m.user_id, u.id_number, u.name 
+    FROM monitorings m
+    JOIN users u ON m.user_id = u.id
+    WHERE u.id_number LIKE '%$search_term%' OR u.name LIKE '%$search_term%'
+";
+$result = $conn->query($sql_monitorings);
 ?>
-    
-<!-- Table to display monitorings -->
-<div style="margin-left: 400px">
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>Monitoring ID</th>
-            <th>User ID</th>
-            <th>ID Number</th>
-            <th>Student Name</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        if ($result) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<td>" . $row['monitoring_id'] . "</td>";
-                echo "<td>" . $row['user_id'] . "</td>";
-                echo "<td>" . $row['id_number'] . "</td>";
-                echo "<td>" . $row['student_name'] . "</td>";
-                echo "<td>
-                    <form method='POST' action=''>
-                        <input type='hidden' name='monitoring_id' value='" . $row['monitoring_id'] . "' />
-                        <input type='datetime-local' name='schedule_date' required />
-                        <button type='submit' name='submit_schedule'>Add Schedule</button>
-                    </form>
-                </td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='6'>No data available</td></tr>";
-        }
-        ?>
-    </tbody>
-</table>
+
+<div class="container mt-4">
+    <h1 class="mb-4 text-center">Monitored Students</h1>
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input 
+                type="text" 
+                name="search" 
+                class="form-control" 
+                placeholder="Search by ID Number or Name" 
+                value="<?= htmlspecialchars($search_term) ?>"
+            >
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </form>
+
+    <?php if ($result->num_rows > 0): ?>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th scope="col">ID Number</th>
+                        <th scope="col">Student Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($monitoring = $result->fetch_assoc()): ?>
+                        <tr class="text-center">
+                            <td><?= htmlspecialchars($monitoring['id_number']); ?></td>
+                            <td><?= htmlspecialchars($monitoring['name']); ?></td>
+                            <td class="d-flex justify-content-center gap-2">
+                                <a href="monitor_student.php?id=<?= $monitoring['user_id']; ?>" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-info text-center">No monitored students found.</div>
+    <?php endif; ?>
 </div>

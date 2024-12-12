@@ -1,53 +1,66 @@
+
 <?php
 include 'navbar.php';
 include '../db.php';
 
 // Handle Accept Action
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'accept') {
-    $request_id = $_POST['request_id'];
-    $message = $_POST['message'];
-    $visit_at = $_POST['visit_at'];
+    $request_id = intval($_POST['request_id']);
+    $message = trim($_POST['message']);
+    $visit_at = date('Y-m-d H:i:s', strtotime($_POST['visit_at']));
 
-    // Update the request status and message
-    $sql_update = "UPDATE requests SET status = 'accepted', message = ?, visit_at = ? WHERE id = ?";
+   
+    // Check if the request exists
+    $result = $conn->query("SELECT * FROM requests WHERE id = $request_id");
+    if ($result->num_rows === 0) {
+        echo "<div class='alert alert-danger'>No matching request found for ID: $request_id</div>";
+        exit;
+    }
+
+    // Prepare and execute the update query
+    $sql_update = "UPDATE requests SET status = 'approved', message = ?, visit_at = ? WHERE id = ?";
     $stmt = $conn->prepare($sql_update);
-    $stmt->bind_param("ssi", $message, $visit_at, $request_id);
 
+    if ($stmt === false) {
+        echo "<div class='alert alert-danger'>Prepare failed: " . $conn->error . "</div>";
+        exit;
+    }
+
+    // Bind parameters
+    if (!$stmt->bind_param("ssi", $message, $visit_at, $request_id)) {
+        echo "<div class='alert alert-danger'>Binding parameters failed: " . $stmt->error . "</div>";
+        exit;
+    }
+
+    // Execute the query
     if ($stmt->execute()) {
-        echo "<div class='alert alert-success'>Request has been accepted successfully!</div>";
+        if ($stmt->affected_rows > 0) {
+            echo "<div class='alert alert-success'>Request has been accepted successfully!</div>";
+        } else {
+            echo "<div class='alert alert-warning'>No rows were updated. The request might already be approved.</div>";
+        }
     } else {
-        echo "<div class='alert alert-danger'>Error accepting request: " . $conn->error . "</div>";
+        echo "<div class='alert alert-danger'>Error executing query: " . $stmt->error . "</div>";
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Requests</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
-<body>
-<div class="container-fluid" style="margin-left: 100px;">
-    <table class="table table-striped table-bordered mt-5" style="margin: auto; max-width: 1280px;">
-        <thead class="table-dark">
-            <tr>
-                <th>Name</th>
-                <th>Reason</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+<h1 class="text-center">Requests</h1>
+  <table class="table table-striped table-hover table-bordered text-center align-middle mt-5 shadow-sm" style="margin: auto; max-width: 1280px; border-radius: 8px; overflow: hidden;">
+    <thead class="table-dark" style="position: sticky; top: 0; z-index: 10;">
+        <tr>
+            <th style="width: 25%;">Name</th>
+            <th style="width: 35%;">Reason</th>
+            <th style="width: 20%;">Date</th>
+            <th style="width: 20%;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
         <?php
         // Query to fetch pending requests with the student's name
-        $sql = "SELECT request.*, s.name AS student_name, s.user_id
-                FROM requests request
-                JOIN students s ON request.user_id = s.user_id
-                WHERE request.status = 'pending'";
+        $sql = "SELECT r.*, u.name 
+        FROM requests r 
+        JOIN users u ON r.user_id = u.id 
+        WHERE r.status = 'pending'";
 
         $result = $conn->query($sql);
 
@@ -59,13 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         if ($result->num_rows) {
             while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($row['student_name']) . "</td>";
+                echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['reason']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
+                echo "<td>" . htmlspecialchars(date("Y-m-d", strtotime($row['created_at']))) . "</td>";
                 echo "<td>";
-                echo "<button type='button' class='btn btn-primary' onclick='openAcceptModal(" . $row['id'] . ")'>Accept</button> ";
-                echo "<button type='button' class='btn btn-secondary' onclick='viewStudent(" . $row['user_id'] . ")'>View</button>";
-                echo "<button type='button' class='btn btn-dark' >Monitor</button>";
+                echo "<button type='button' class='btn btn-success btn-sm mx-1' onclick='openAcceptModal(" . $row['id'] . ")'>Accept</button>";
+                // echo "<button type='button' class='btn btn-secondary btn-sm mx-1' onclick='viewStudent(" . $row['user_id'] . ")'>View</button>";
                 echo "</td>";
                 echo "</tr>";
             }
@@ -73,20 +85,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             echo "<tr><td colspan='4'>No pending requests</td></tr>";
         }
         ?>
-        </tbody>
-    </table>
-</div>
+    </tbody>
+</table>
+
 
 <!-- Accept Request Modal -->
 <div class="modal fade" id="acceptRequestModal" tabindex="-1" aria-labelledby="acceptRequestModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header">
                 <h5 class="modal-title" id="acceptRequestModalLabel">
-                    <i class="fas fa-check-circle me-2"></i> Accept Request
+                    Accept Request
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close b" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <!-- Modal Body -->
@@ -118,17 +130,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                     <!-- Submit Button -->
                     <button type="submit" name="action" value="accept" class="btn btn-success w-100">
-                        <i class="fas fa-paper-plane me-2"></i> Submit
+                        Submit
                     </button>
                 </form>
             </div>
 
             <!-- Modal Footer -->
-            <div class="modal-footer d-flex justify-content-end">
+            <!-- <div class="modal-footer d-flex justify-content-end">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times-circle me-2"></i> Close
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

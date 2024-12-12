@@ -1,6 +1,6 @@
 <?php
-include '../db.php'; // Include your database connection file
-include 'navbar.php'; // Include your database connection file
+include '../db.php';
+include 'navbar.php';
 
 // Ensure the user is logged in
 if (!isset($_SESSION['user']['id'])) {
@@ -18,7 +18,7 @@ $query_monitoring->execute();
 $result_monitoring = $query_monitoring->get_result();
 
 // Query to fetch student details
-$query_student = $conn->prepare("SELECT * FROM students WHERE user_id = ?");
+$query_student = $conn->prepare("SELECT * FROM users WHERE id = ?");
 $query_student->bind_param('i', $user_id);
 $query_student->execute();
 $result_student = $query_student->get_result();
@@ -38,9 +38,9 @@ $is_monitored = $result_monitoring->num_rows > 0;
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Monitoring Status</h1>
+        <h1 class="text-center mb-4">Monitoring Status</h1>
 
-        <div class="card mt-4">
+        <div class="card shadow-lg">
             <div class="card-body">
                 <?php if ($is_monitored): ?>
                     <h3 class="text-success text-center">You are currently being monitored by the nurse.</h3>
@@ -54,17 +54,15 @@ $is_monitored = $result_monitoring->num_rows > 0;
         <div class="text-center mt-4">
             <?php if ($student): ?>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentDetailsModal">
-                    View Details
+                    View Your Details
                 </button>
             <?php endif; ?>
         </div>
     </div>
 
-    
-
     <!-- Student Details Modal -->
     <div class="modal fade" id="studentDetailsModal" tabindex="-1" aria-labelledby="studentDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="studentDetailsModalLabel">Student Details</h5>
@@ -72,25 +70,26 @@ $is_monitored = $result_monitoring->num_rows > 0;
                 </div>
                 <div class="modal-body">
                     <?php if ($student): ?>
-                        <p><strong>Name:</strong> <?= htmlspecialchars($student['name']) ?></p>
-                        <p><strong>Phone:</strong> <?= htmlspecialchars($student['phone']) ?></p>
-                        <p><strong>Address:</strong> <?= htmlspecialchars($student['address']) ?></p>
-                        <p><strong>Email:</strong> <?= htmlspecialchars($student['email']) ?></p>
-                        <p><strong>Date of Birth:</strong> <?= htmlspecialchars($student['date']) ?></p>
-                        <p><strong>Age:</strong> <?= htmlspecialchars($student['age']) ?></p>
-                        <p><strong>Gender:</strong> <?= htmlspecialchars($student['gender']) ?></p>
-                        <p><strong>Course:</strong> <?= htmlspecialchars($student['course']) ?></p>
-                        <p><strong>Year & Section:</strong> <?= htmlspecialchars($student['year_sec']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['vaccine_type']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['guardian_number']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['student_number']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['parent']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['disability']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['blood_pressure']) ?></p>
-                        <p><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['temperature']) ?></p>
-                        <p><strong>Health conditions:</strong> <?= htmlspecialchars($student['health_conditions']) ?></p>
+                        <ul class="list-group">
+                            <li class="list-group-item"><strong>Name:</strong> <?= htmlspecialchars($student['name']) ?></li>
+                            <li class="list-group-item"><strong>Phone:</strong> <?= htmlspecialchars($student['phone']) ?></li>
+                            <li class="list-group-item"><strong>Address:</strong> <?= htmlspecialchars($student['address']) ?></li>
+                            <li class="list-group-item"><strong>Email:</strong> <?= htmlspecialchars($student['email']) ?></li>
+                            <li class="list-group-item"><strong>Date of Birth:</strong> <?= htmlspecialchars($student['birthdate']) ?></li>
+                            <li class="list-group-item"><strong>Gender:</strong> <?= htmlspecialchars($student['gender']) ?></li>
+                            <li class="list-group-item"><strong>Course:</strong> <?= htmlspecialchars($student['course']) ?></li>
+                            <li class="list-group-item"><strong>Year & Section:</strong> <?= htmlspecialchars($student['year_sec']) ?></li>
+                            <li class="list-group-item"><strong>Vaccine Type:</strong> <?= htmlspecialchars($student['vaccine_type']) ?></li>
+                            <li class="list-group-item"><strong>Guardian Number:</strong> <?= htmlspecialchars($student['guardian_number']) ?></li>
+                            <li class="list-group-item"><strong>Student Number:</strong> <?= htmlspecialchars($student['id_number']) ?></li>
+                            <li class="list-group-item"><strong>Parent:</strong> <?= htmlspecialchars($student['parent']) ?></li>
+                            <li class="list-group-item"><strong>Disability:</strong> <?= htmlspecialchars($student['disability']) ?></li>
+                            <li class="list-group-item"><strong>Blood Pressure:</strong> <?= htmlspecialchars($student['blood_pressure']) ?></li>
+                            <li class="list-group-item"><strong>Temperature:</strong> <?= htmlspecialchars($student['temperature']) ?></li>
+                            <li class="list-group-item"><strong>Health Conditions:</strong> <?= htmlspecialchars($student['health_conditions']) ?></li>
+                        </ul>
                     <?php else: ?>
-                        <p class="text-danger">Student details not found.</p>
+                        <p class="text-danger text-center">Student details not found.</p>
                     <?php endif; ?>
                 </div>
                 <div class="modal-footer">

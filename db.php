@@ -3,7 +3,7 @@
 $servername = "localhost"; // Change if necessary
 $username = "root"; // Replace with your database username
 $password = ""; // Replace with your database password
-$dbname = "clinic"; // Your database name
+$dbname = "cpc_clinic"; // Your database name
 
 // Check if connection already exists
 if (!isset($conn)) {

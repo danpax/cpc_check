@@ -4,6 +4,11 @@ if (!isset($_SESSION["user"])) {
     header("Location: ../login.php");
     exit();
 }
+else {
+    if($_SESSION['user']['role'] == 'nurse') {
+        echo "<script>window.history.back();</script>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,16 +108,16 @@ if (!isset($_SESSION["user"])) {
                     <li class="nav-item">
                         <a class="nav-link" href="notifications.php"><i class="fas fa-bell"></i></a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user"></i> Account
+                    <li class="nav-item">
+                        <a class="nav-link" href="../logout.php">
+                            <i class="fas fa-user"></i> Logout
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#"><i class="fas fa-user-circle"></i> Profile</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
+                        </ul> -->
                     </li>
                 </ul>
             </div>

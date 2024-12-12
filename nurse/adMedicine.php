@@ -1,102 +1,128 @@
 <?php
-
 include 'navbar.php';
-// Database connection
-$conn = new mysqli("localhost", "root", "", "clinic");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+include '../db.php';
+
+// Function to add expired style class
+function getExpiredStyle($expired_at) {
+    return strtotime($expired_at) < time() ? "table-danger" : "";
 }
 
 // Add new medicine
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_medicine'])) {
-    $medicine_name = $conn->real_escape_string($_POST['medicine_name']);
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_medicine'])) {
+    $name = $conn->real_escape_string($_POST['name']);
     $stock = intval($_POST['stock']);
-    $description = $conn->real_escape_string($_POST['description']);
-    $expiration = $conn->real_escape_string($_POST['expiration']);
-    
-    $sql = "INSERT INTO medicines (medicine_name, stock, description, expiration_date) VALUES ('$medicine_name', $stock, '$description', '$expiration')";
-    $conn->query($sql);
+    $desc = $conn->real_escape_string($_POST['desc']);
+
+    if (empty($name) || $stock <= 0 || empty($desc)) {
+        echo "<div class='toast align-items-center text-bg-danger' role='alert'>
+                <div class='d-flex'>
+                    <div class='toast-body'>Invalid input values for adding medicine.</div>
+                    <button type='button' class='btn-close me-2 m-auto' data-bs-dismiss='toast' aria-label='Close'></button>
+                </div>
+              </div>";
+    } else {
+        $sql = "INSERT INTO medicines (name, stock, `desc`) VALUES ('$name', $stock, '$desc')";
+        if ($conn->query($sql)) {
+            echo "<div class='toast align-items-center text-bg-success' role='alert'>
+                    <div class='d-flex'>
+                        <div class='toast-body'>Medicine added successfully!</div>
+                        <button type='button' class='btn-close me-2 m-auto' data-bs-dismiss='toast' aria-label='Close'></button>
+                    </div>
+                  </div>";
+        } else {
+            echo "<div class='toast align-items-center text-bg-danger' role='alert'>
+                    <div class='d-flex'>
+                        <div class='toast-body'>Error adding medicine: " . $conn->error . "</div>
+                        <button type='button' class='btn-close me-2 m-auto' data-bs-dismiss='toast' aria-label='Close'></button>
+                    </div>
+                  </div>";
+        }
+    }
 }
 
 // Fetch medicines
-$sql = "SELECT * FROM medicines ORDER BY expiration_date ASC";
+$sql = "SELECT * FROM medicines";
 $result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        .expired { background-color: red; }
+        .expired {
+            background-color: #f8d7da;
+        }
     </style>
+</head>
 <body>
-    <?php ?>
-    <br>
-    <br>
-
     <div class="container mt-5">
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMedicineModal" style="float: right; margin-right: 10%; height: 50px">+ Add Medicine</button>
-        <input type="search" name="search" id="search" placeholder="Search" onkeyup="searchMedicines()">
-        <br>
-        <br>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Medicine Inventory</h1>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMedicineModal">
+                + Add Medicine
+            </button>
+        </div>
 
-        <table class="table table-striped table-bordered" id="medicineTable">
+        <input type="search" name="search" id="search" placeholder="Search for a medicine..." onkeyup="searchMedicines()" class="form-control mb-3">
+
+        <table class="table table-hover table-bordered" id="medicineTable">
             <thead class="table-dark">
                 <tr>
                     <th>Medicine</th>
                     <th>Stock</th>
                     <th>Description</th>
                     <th>Expiration Date</th>
-                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
                 if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        $expired = strtotime($row['expiration_date']) < time() ? 'expired' : '';
-                        echo "<tr class='" . $expired . "'>";
-                        echo "<td>" . htmlspecialchars($row['medicine_name']) . "</td>";
+                    while ($row = $result->fetch_assoc()) {
+                        $expiredClass = getExpiredStyle($row['expired_at']);
+                        echo "<tr class='$expiredClass'>";
+                        echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['stock']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                        echo "<td>" . htmlspecialchars($row['expiration_date']) . "</td>";
-                        echo "<td>" . ($expired ? 'Expired' : 'Active') . "</td>";
+                        echo "<td>" . htmlspecialchars($row['desc']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['expired_at']) . "</td>";
                         echo "</tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='5'>No medicines found</td></tr>";
+                    echo "<tr><td colspan='4' class='text-center'>No medicines found</td></tr>";
                 }
                 ?>
             </tbody>
         </table>
 
         <!-- Add Medicine Modal -->
-        <div class="modal" id="addMedicineModal">
+        <div class="modal fade" id="addMedicineModal" tabindex="-1" aria-labelledby="addMedicineModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add New Medicine</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form method="POST">
-                            <label for="medicine_name" class="form-label">Medicine name: </label>
-                            <input type="text" id="medicine_name" name="medicine_name" class="form-control" required>
-                            
-                            <label for="stock" class="form-label">Stock: </label>
-                            <input type="number" id="stock" name="stock" class="form-control" required>
-                            
-                            <label for="description" class="form-label">Description: </label>
-                            <input type="text" id="description" name="description" class="form-control" required>
-                            
-                            <label for="expiration" class="form-label">Expiration Date: </label>
-                            <input type="date" id="expiration" name="expiration" class="form-control" required>
-                            
-                            <button type="submit" name="add_medicine" class="btn btn-primary mt-3">Add</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+                    <form method="POST">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="addMedicineModalLabel">Add New Medicine</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Medicine Name:</label>
+                                <input type="text" id="name" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="stock" class="form-label">Stock:</label>
+                                <input type="number" id="stock" name="stock" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="desc" class="form-label">Description:</label>
+                                <textarea id="desc" name="desc" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name="add_medicine" class="btn btn-primary">Add Medicine</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -105,21 +131,16 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function searchMedicines() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("search");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("medicineTable");
-            tr = table.getElementsByTagName("tr");
+            var input = document.getElementById("search");
+            var filter = input.value.toUpperCase();
+            var table = document.getElementById("medicineTable");
+            var tr = table.getElementsByTagName("tr");
 
-            for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
+            for (var i = 1; i < tr.length; i++) {
+                var td = tr[i].getElementsByTagName("td")[0];
                 if (td) {
-                    txtValue = td.textContent || td.innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
+                    var txtValue = td.textContent || td.innerText;
+                    tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
                 }
             }
         }
